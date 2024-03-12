@@ -1974,74 +1974,75 @@ Lien : https://onelink.to/a95vau`,
 
 const dataSeeder = async () => {
   // DATA SEED for groupe table
-  // groupes.forEach(async (groupe) => {
-  //   await prisma.group.create({
-  //     data: {
-  //       name: groupe.name,
-  //     },
-  //   });
-  // });
+  groupes.forEach(async (groupe) => {
+    await prisma.group.create({
+      data: {
+        name: groupe.name,
+      },
+    });
+  });
   // // DATA SEED for Cities
 
-  // cities.forEach(async (city) => {
-  //   await prisma.city.create({
-  //     data: {
-  //       name: city.name,
-  //     },
-  //   });
-  // });
+  cities.forEach(async (city) => {
+    await prisma.city.create({
+      data: {
+        name: city.name,
+      },
+    });
+  });
 
   // // // DATA SEED for groupe categories
-  // categories.forEach(async (category) => {
-  //   await prisma.category.create({
-  //     data: {
-  //       name: category.name,
-  //       nameAr: category.name_ar,
-  //       facebookLink: category.facebook_link,
-  //       instagramLink: category.instagram_link,
-  //       tiktokLink: category.tiktok_link,
-  //       webSiteLink: "https://carrefourmaroc.ma/",
-  //     },
-  //   });
-  // });
+  categories.forEach(async (category) => {
+    await prisma.category.create({
+      data: {
+        name: category.name,
+        nameAr: category.name_ar,
+        facebookLink: category.facebook_link,
+        instagramLink: category.instagram_link,
+        tiktokLink: category.tiktok_link,
+        webSiteLink: "https://carrefourmaroc.ma/",
+      },
+    });
+  });
 
-  // stores.forEach(async (store) => {
-  //   let city = await prisma.city.findFirst({
-  //     where: {
-  //       name: cities[store.city_id - 1].name,
-  //     },
-  //   });
-  //   let group = await prisma.group.findFirst({
-  //     where: {
-  //       name: groupes[store.groupe_id - 1].name,
-  //     },
-  //   });
-  //   let category = await prisma.category.findFirst({
-  //     where: {
-  //       name: categories[store.category_id - 1].name,
-  //     },
-  //   });
+  stores.forEach(async (store) => {
+    let city = await prisma.city.findFirst({
+      where: {
+        name: cities[store.city_id - 1].name,
+      },
+    });
+    let group = await prisma.group.findFirst({
+      where: {
+        name: groupes[store.groupe_id - 1].name,
+      },
+    });
+    let category = await prisma.category.findFirst({
+      where: {
+        name: categories[store.category_id - 1].name,
+      },
+    });
 
-  //   console.log(cities[store.city_id - 1]);
-  //   console.log(city);
+    console.log(cities[store.city_id - 1]);
+    console.log(city);
 
-  //   await prisma.store.create({
-  //     data: {
-  //       name: store.name_fr,
-  //       latitude: store.latitude,
-  //       longitude: store.longitude,
-  //       streetAdress: store.street_address,
-  //       city: { connect: { id: city.id } },
-  //       group: { connect: { id: group.id } },
-  //       category: { connect: { id: category.id } },
-  //     },
-  //   });
-  // });
+    await prisma.store.create({
+      data: {
+        name: store.name_fr,
+        latitude: store.latitude,
+        longitude: store.longitude,
+        streetAdress: store.street_address,
+        city: { connect: { id: city.id } },
+        group: { connect: { id: group.id } },
+        category: { connect: { id: category.id } },
+      },
+    });
+  });
 
   await Promise.all(
-    messageTemplates.map(async (template) => {
+    messageTemplates.map(async (template, index) => {
       await prisma.messageTemplate.create({
         data: {
+          id: ++index,
           titleAr: template.textAr,
           titleFr: template.textFr,
           contentAr: template.descriptionAr,
