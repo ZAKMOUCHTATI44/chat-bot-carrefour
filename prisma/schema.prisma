@@ -1,0 +1,173 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Catalog {
+  id        String   @id @default(uuid())
+  path      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Store     Store[]
+
+  @@map("catalogs")
+}
+
+model Category {
+  id            String   @id @default(uuid())
+  name          String
+  nameAr        String
+  facebookLink  String?
+  instagramLink String?
+  tiktokLink    String?
+  webSiteLink   String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Store         Store[]
+
+  @@map("categories")
+}
+
+model City {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Store     Store[]
+
+  @@map("cities")
+}
+
+model Faq {
+  id        String   @id @default(uuid())
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("faqs")
+}
+
+model Group {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Store     Store[]
+
+  @@map("groups")
+}
+
+model Store {
+  id            String   @id @default(uuid())
+  storeId       Int      @unique @default(autoincrement())
+  name          String
+  nameAr        String?
+  distance      String?
+  latitude      Float
+  longitude     Float
+  streetAdress  String
+  locationCount Int      @default(0)
+  catalogCount  Int      @default(0)
+  city          City     @relation(fields: [cityId], references: [id])
+  cityId        String
+  group         Group    @relation(fields: [groupId], references: [id])
+  groupId       String
+  category      Category @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  catalog       Catalog? @relation(fields: [catalogId], references: [id])
+  catalogId     String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  Lead          Lead[]
+
+  @@map("stores")
+}
+
+model Ticket {
+  id        String       @id @default(uuid())
+  content   String       @db.LongText
+  phone     String
+  status    Ticketstatus @default(new)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@map("tickets")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  password  String
+  role      UserRole @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Lead {
+  id          Int      @id @default(autoincrement())
+  profileName String
+  phone       String   @unique
+  lang        Lang
+  storeId     String?
+  store       Store?   @relation(fields: [storeId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("leads")
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  messageId String
+  to        String
+  from      String
+  type      String
+  body      String
+  step      Int?
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("messages")
+}
+
+model MessageTemplate {
+  id        Int      @id @default(autoincrement())
+  contentFr String   @db.LongText
+  contentAr String   @db.LongText
+  titleAr   String
+  titleFr   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("message_templates")
+}
+
+enum Lang {
+  AR
+  FR
+}
+
+enum Ticketstatus {
+  new
+  processing
+  assign
+  done
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
