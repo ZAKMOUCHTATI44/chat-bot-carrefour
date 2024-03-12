@@ -274,4 +274,4 @@ app.use("/api/", router);
 
 app.use("/auth/", routerAuth);
 
-app.listen(4000, () => console.log("APP WAS RUNING !!!"));
+app.listen(6000, () => console.log("APP WAS RUNING !!!"));

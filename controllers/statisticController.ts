@@ -15,7 +15,7 @@ export async function statistic(req: Request, res: Response) {
     },
   });
 
-  const ticketsCountByStatus = await prisma.tickets.groupBy({
+  const ticketsCountByStatus = await prisma.ticket.groupBy({
     by: ["status"],
     _count: {
       id: true,
