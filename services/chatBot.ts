@@ -41,15 +41,22 @@ export async function chatbot(req: Request, res: Response) {
           from: message.to,
           to: message.from,
           message_type: "custom",
-          custom: await storeOption(message.from, search),
+          custom: await storeOption(
+            message.location.lat,
+            message.location.long,
+            message.from,
+            search
+          ),
         });
 
         break;
       case "reply":
         let { id, title, description } = message?.reply;
         if (id.includes("location")) {
+          console.log(message.from,id.replace('location',''))
           console.log("GET THE LOCATION OF STROE");
         } else if (id.includes("catalogue")) {
+          console.log(message.from,id.replace('catalogue',''))
           console.log("GET THE catalogue OF STROE");
         } else if (id.includes("btn-lang-fr")) {
           sendMessage({
@@ -78,16 +85,6 @@ export async function chatbot(req: Request, res: Response) {
             lang: Lang.AR,
             phone: message.from,
             profileName: message.profile.name,
-          });
-        } else if (id.includes("location")) {
-          console.log("location");
-
-          sendMessage({
-            channel: "whatsapp",
-            from: message.to,
-            to: message.from,
-            message_type: "custom",
-            custom: await getStore(description),
           });
         } else if (id.includes("option")) {
           step = id.replace("option", "");
