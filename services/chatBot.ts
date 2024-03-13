@@ -50,7 +50,7 @@ export async function chatbot(req: Request, res: Response) {
         if (id.includes("location")) {
           console.log("GET THE LOCATION OF STROE");
         } else if (id.includes("catalogue")) {
-          console.log("GET THE LOCATION OF STROE");
+          console.log("GET THE catalogue OF STROE");
         } else if (id.includes("btn-lang-fr")) {
           sendMessage({
             channel: "whatsapp",
