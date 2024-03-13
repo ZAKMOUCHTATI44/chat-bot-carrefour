@@ -53,7 +53,7 @@ export async function chatbot(req: Request, res: Response) {
       case "reply":
         let { id, title, description } = message?.reply;
         if (id.includes("location")) {
-          console.log(message.from,id.replace('location',''))
+          console.log(id.replace('location',''))
           console.log("GET THE LOCATION OF STROE");
         } else if (id.includes("catalogue")) {
           console.log(message.from,id.replace('catalogue',''))

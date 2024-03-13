@@ -24,7 +24,7 @@ export async function storeOption(
 
   let rows = stores.map((store, index) => {
     return {
-      id: `${search}${store.id}`,
+      id: `${search}${store.storeId}`,
       title: " ",
       description: store.name,
     };
