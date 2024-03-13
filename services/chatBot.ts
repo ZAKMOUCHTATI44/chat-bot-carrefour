@@ -4,7 +4,7 @@ import { getLastMessage, saveMessage } from "./messageService";
 import { createOrUpdateLead, getLang } from "./leadService";
 import { sendMessage } from "./whatsapp";
 import { Lang } from "@prisma/client";
-import { buttonMenu, getMenu } from "./Menu";
+import { buttonMenu, getMenu, welcomeMessage } from "./Menu";
 import { getStore, storeOption } from "./stores";
 import { getResponse } from "./MessageTemplate";
 
@@ -13,6 +13,8 @@ export async function chatbot(req: Request, res: Response) {
   let step: string = "";
 
   const lastMessage = await getLastMessage(message.from);
+
+  console.log(message);
 
   if (lastMessage && lastMessage.step === 4) {
     // send response after sending reclamation
@@ -30,7 +32,9 @@ export async function chatbot(req: Request, res: Response) {
   } else {
     switch (message.message_type) {
       case "location":
+        console.log(message);
         console.log(lastMessage);
+
         sendMessage({
           channel: "whatsapp",
           from: message.to,
@@ -42,14 +46,14 @@ export async function chatbot(req: Request, res: Response) {
         break;
       case "reply":
         let { id, title, description } = message?.reply;
+
         if (id.includes("btn-lang-fr")) {
-          let custom = await getMenu(Lang.FR);
           sendMessage({
             channel: "whatsapp",
             from: message.to,
             to: message.from,
             message_type: "custom",
-            custom,
+            custom: await getMenu(Lang.FR),
           });
 
           createOrUpdateLead({
@@ -58,13 +62,12 @@ export async function chatbot(req: Request, res: Response) {
             profileName: message.profile.name,
           });
         } else if (id.includes("btn-lang-ar")) {
-          let custom = await getMenu(Lang.AR);
           sendMessage({
             channel: "whatsapp",
             from: message.to,
             to: message.from,
             message_type: "custom",
-            custom,
+            custom: await getMenu(Lang.AR),
           });
 
           createOrUpdateLead({
@@ -114,6 +117,13 @@ export async function chatbot(req: Request, res: Response) {
         break;
 
       default:
+        sendMessage({
+          channel: "whatsapp",
+          from: message.to,
+          to: message.from,
+          message_type: "custom",
+          custom: welcomeMessage(),
+        });
         break;
     }
   }

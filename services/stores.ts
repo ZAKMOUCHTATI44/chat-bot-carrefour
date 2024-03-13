@@ -26,19 +26,19 @@ export async function storeOption(phone: string): Promise<any> {
       type: "list",
       header: {
         type: "text",
-        text: lang === "AR" ? "سيتي كلوب" : "City Club",
+        text: lang === "AR" ? "كارفور" : "Carrefour",
       },
       body: {
         text:
           lang === "AR"
-            ? "اختر نادي الاقرب إليك"
-            : "Voici les clubs les plus proches de chez vous , choisissez le vôtre",
+            ? "اختر متجر كارفور الاقرب إليك"
+            : "Voici les magasins les plus proches de chez vous , choisissez le vôtre",
       },
       action: {
         button: lang === "AR" ? "خيارات" : "Options",
         sections: [
           {
-            title: lang === "AR" ? "هنا نادي :" : "Voici vos clubs :",
+            title: lang === "AR" ? "هنا متاجرك:" : "Voici vos magasins :",
             rows: rows,
           },
         ],

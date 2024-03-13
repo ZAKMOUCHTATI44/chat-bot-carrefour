@@ -5,8 +5,8 @@ import { getLang } from "./leadService";
 export async function getMenu(lang: Lang) {
   let rows = await getSteps(lang);
   let body = {
-    fr: "Veuillez appuyer sur options pour choisir l’un de nos services",
-    ar: "يرجى الضغط على الخيارات لاختيار أحد خدماتنا",
+    fr: "Bonjour 👋😁, que puis-je faire pour vous ? Veuillez appuyer sur options pour choisir l’un de nos services",
+    ar: "مرحبًا 👋😁 ، ماذا أفعل من أجلك؟ اضغط على الخيارات لاختيار إحدى خدماتنا",
   };
 
   let custom = {
@@ -15,7 +15,7 @@ export async function getMenu(lang: Lang) {
       type: "list",
       header: {
         type: "text",
-        text: lang === Lang.AR ? "سيتي كلوب" : "Carrefour",
+        text: lang === Lang.AR ? "كارفور" : "Carrefour",
       },
       body: {
         text: lang === Lang.AR ? body.ar : body.fr,
@@ -38,7 +38,6 @@ export async function getMenu(lang: Lang) {
 
   return custom;
 }
-
 
 export const buttonMenu = async (phone: string) => {
   const lang = await getLang(phone);
@@ -69,3 +68,42 @@ export const buttonMenu = async (phone: string) => {
 
   return custom;
 };
+
+export function welcomeMessage(): any {
+  let custom = {
+    type: "interactive",
+    interactive: {
+      type: "button",
+      header: {
+        type: "text",
+        text: "Bonjour",
+      },
+      body: {
+        text: "Merci de nous avoir contacté! Merci de sélectionner votre langue. \n مرحبًا ، شكرًا على تواصلك معنا! الرجاء تحديد اللغة.",
+      },
+      footer: {
+        text: "Veuillez sélectionner une langue.",
+      },
+      action: {
+        buttons: [
+          {
+            type: "reply",
+            reply: {
+              id: "btn-lang-fr",
+              title: "Français",
+            },
+          },
+          {
+            type: "reply",
+            reply: {
+              id: "btn-lang-ar",
+              title: "Arabe",
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  return custom;
+}
