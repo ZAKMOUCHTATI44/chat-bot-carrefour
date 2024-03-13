@@ -15,12 +15,14 @@ export async function storeOption(
   let lang = await getLang(phone);
 
   const stores: Store[] = await prisma.$queryRaw`
-  SELECT name , id,
+  SELECT name , id,storeId,
     ( 6371 * acos( cos( radians(${latitude}) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(${longitude}) ) + sin( radians(${latitude}) ) * sin( radians( latitude ) ) ) ) AS distance
   FROM stores
   ORDER BY distance ASC
   LIMIT 10
 `;
+
+  console.log(stores);
 
   let rows = stores.map((store, index) => {
     return {
