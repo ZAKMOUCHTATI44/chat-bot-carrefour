@@ -5,7 +5,7 @@ export async function getStores() {}
 
 export async function getStore(id: string) {}
 
-export async function storeOption(phone: string): Promise<any> {
+export async function storeOption(phone: string, search: string): Promise<any> {
   let lang = await getLang(phone);
 
   const stores = await prisma.store.findMany({
@@ -14,7 +14,7 @@ export async function storeOption(phone: string): Promise<any> {
 
   let rows = stores.map((store, index) => {
     return {
-      id: `location${store.id}`,
+      id: `${search}${store.id}`,
       title: " ",
       description: store.name,
     };

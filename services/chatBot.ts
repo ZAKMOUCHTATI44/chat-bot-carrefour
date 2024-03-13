@@ -32,22 +32,26 @@ export async function chatbot(req: Request, res: Response) {
   } else {
     switch (message.message_type) {
       case "location":
-        console.log(message);
-        console.log(lastMessage);
-
+        let search = "location";
+        if (lastMessage.step === 2) {
+          search = "catalogue";
+        }
         sendMessage({
           channel: "whatsapp",
           from: message.to,
           to: message.from,
           message_type: "custom",
-          custom: await storeOption(message.from),
+          custom: await storeOption(message.from, search),
         });
 
         break;
       case "reply":
         let { id, title, description } = message?.reply;
-
-        if (id.includes("btn-lang-fr")) {
+        if (id.includes("location")) {
+          console.log("GET THE LOCATION OF STROE");
+        } else if (id.includes("catalogue")) {
+          console.log("GET THE LOCATION OF STROE");
+        } else if (id.includes("btn-lang-fr")) {
           sendMessage({
             channel: "whatsapp",
             from: message.to,
