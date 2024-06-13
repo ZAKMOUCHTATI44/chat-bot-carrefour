@@ -4,8 +4,7 @@
 
 ## Folder Structure
 Here is an overview of the folder structure of this project:
-
-```
+ ```bash
 .
 ├── controllers    # Contains the controllers for handling incoming requests
 ├── database       # Database configuration and connection
