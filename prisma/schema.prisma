@@ -21,7 +21,7 @@ model Catalog {
 }
 
 model Category {
-  id            String   @id @default(uuid())
+  id            Int      @id @default(autoincrement())
   name          String
   nameAr        String
   facebookLink  String?
@@ -81,7 +81,7 @@ model Store {
   group         Group    @relation(fields: [groupId], references: [id])
   groupId       String
   category      Category @relation(fields: [categoryId], references: [id])
-  categoryId    String
+  categoryId    Int
   catalog       Catalog? @relation(fields: [catalogId], references: [id])
   catalogId     String?
   createdAt     DateTime @default(now())

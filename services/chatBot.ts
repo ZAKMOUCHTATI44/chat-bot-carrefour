@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { MessageRequest } from "../types/app";
 import { getLastMessage, saveMessage } from "./messageService";
-import { createOrUpdateLead, getLang } from "./leadService";
+import { createOrUpdateLead, getLang, sendButtonFollow } from "./leadService";
 import { sendMessage } from "./whatsapp";
 import { Lang } from "@prisma/client";
-import { buttonMenu, getMenu, welcomeMessage } from "./Menu";
-import { getStore, storeOption } from "./stores";
-import { getResponse } from "./MessageTemplate";
+import { buttonMenu, getMenu, welcomeMessage } from "./menu";
+import { getCatalogueOfStore, getStoreLocation, storeOption } from "./stores";
+import { getResponse } from "./messageTemplate";
+import { categoryOption } from "./category";
 
 export async function chatbot(req: Request, res: Response) {
   let message: MessageRequest = req.body;
@@ -53,11 +54,40 @@ export async function chatbot(req: Request, res: Response) {
       case "reply":
         let { id, title, description } = message?.reply;
         if (id.includes("location")) {
-          console.log(id.replace('location',''))
-          console.log("GET THE LOCATION OF STROE");
+          // get the store id and return the location to user
+          sendMessage({
+            channel: "whatsapp",
+            from: message.to,
+            to: message.from,
+            message_type: "custom",
+            custom: await getStoreLocation(id.replace("location", "")),
+          });
+
+          sendButtonBackToMenu(message);
         } else if (id.includes("catalogue")) {
-          console.log(message.from,id.replace('catalogue',''))
-          console.log("GET THE catalogue OF STROE");
+          // get the store id and return the catalogue to user
+          sendMessage({
+            channel: "whatsapp",
+            from: message.to,
+            to: message.from,
+            message_type: "custom",
+            custom: await getCatalogueOfStore(id.replace("catalogue", "")),
+          });
+
+          setTimeout(async () => {
+            sendMessage({
+              channel: "whatsapp",
+              from: message.to,
+              to: message.from,
+              message_type: "custom",
+              custom: await sendButtonFollow(
+                id.replace("catalogue", ""),
+                message.from
+              ),
+            });
+            // Send the default menu
+            sendButtonBackToMenu(message);
+          }, 2500);
         } else if (id.includes("btn-lang-fr")) {
           sendMessage({
             channel: "whatsapp",
@@ -88,16 +118,27 @@ export async function chatbot(req: Request, res: Response) {
           });
         } else if (id.includes("option")) {
           step = id.replace("option", "");
-          let text = await getResponse(Number(step), message.from);
-          sendMessage({
-            channel: "whatsapp",
-            from: message.to,
-            to: message.from,
-            message_type: "text",
-            text,
-          });
 
-          if (!["1", "2", "4"].includes(step)) {
+          if (step === "3") {
+            sendMessage({
+              channel: "whatsapp",
+              from: message.to,
+              to: message.from,
+              message_type: "custom",
+              custom: await categoryOption(message.from),
+            });
+          } else {
+            let text = await getResponse(Number(step), message.from);
+            sendMessage({
+              channel: "whatsapp",
+              from: message.to,
+              to: message.from,
+              message_type: "text",
+              text,
+            });
+          }
+
+          if (!["1", "2", "3", "4"].includes(step)) {
             sendButtonBackToMenu(message);
           }
         } else if (id.includes("menu-default")) {

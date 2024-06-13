@@ -3,6 +3,9 @@ import * as zod from "zod";
 import prisma from "../prisma/prisma";
 
 export async function stores(req: Request, res: Response) {
+  const { name, city } = req.query;
+
+
   const stores = await prisma.store.findMany();
   res.json({ stores });
 }
@@ -13,7 +16,7 @@ export async function createStore(req: Request, res: Response) {
     latitude: zod.number(),
     longitude: zod.number(),
     groupId: zod.string(),
-    categoryId: zod.string(),
+    categoryId: zod.number(),
     cityId: zod.string(),
   });
 

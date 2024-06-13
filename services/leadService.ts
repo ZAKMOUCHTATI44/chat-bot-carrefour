@@ -41,3 +41,33 @@ export const createOrUpdateLead = async (data: {
     });
   }
 };
+
+export async function sendButtonFollow(storeId: string, phone: string) {
+  const lang = await getLang(phone);
+  
+  let custom = {
+    type: "interactive",
+    interactive: {
+      type: "button",
+      body: {
+        text:
+          lang === "AR"
+            ? "استمتع بالعروض لا تُقاوم في متجر كارفور الخاص بك 😍:"
+            : "Profitez des offres imbattables dans votre magasin Carrefour 😍: ",
+      },
+      action: {
+        buttons: [
+          {
+            type: "reply",
+            reply: {
+              id: `btn-follow${storeId}`,
+              title: lang === "AR" ? "استلام القادم" : "Recevoir le prochain",
+            },
+          },
+        ],
+      },
+    },
+  };
+
+  return custom;
+}

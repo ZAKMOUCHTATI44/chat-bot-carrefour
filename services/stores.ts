@@ -4,7 +4,69 @@ import { getLang } from "./leadService";
 
 export async function getStores() {}
 
-export async function getStore(id: string) {}
+export async function getStoreLocation(id: string) {
+  const store = await prisma.store.findFirst({
+    where: {
+      id,
+    },
+  });
+
+  let custom = {
+    type: "location",
+    location: {
+      longitude: store.longitude,
+      latitude: store.latitude,
+      name: store.name,
+      address: store.streetAdress,
+    },
+  };
+
+  await prisma.store.update({
+    where: {
+      id,
+    },
+    data: {
+      locationCount: {
+        increment: +1,
+      },
+    },
+  });
+
+  return custom;
+}
+
+export async function getCatalogueOfStore(id: string) {
+  const store = await prisma.store.findFirst({
+    where: {
+      id,
+    },
+    include: {
+      catalog: true,
+    },
+  });
+
+  // Send the default PDF
+  let custom = {
+    type: "file",
+    file: {
+      url: "/uploads/Nos Catalogues - Carrefour Market.pdf",
+      caption: "Nos Catalogues - Carrefour Market.pdf",
+    },
+  };
+
+  await prisma.store.update({
+    where: {
+      id,
+    },
+    data: {
+      catalogCount: {
+        increment: +1,
+      },
+    },
+  });
+
+  return custom;
+}
 
 export async function storeOption(
   latitude: number,

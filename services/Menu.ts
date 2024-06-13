@@ -1,5 +1,5 @@
 import { Lang } from "@prisma/client";
-import { getSteps } from "./MessageTemplate";
+import { getSteps } from "./messageService";
 import { getLang } from "./leadService";
 
 export async function getMenu(lang: Lang) {
